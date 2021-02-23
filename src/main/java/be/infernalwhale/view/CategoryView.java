@@ -78,6 +78,7 @@ public class CategoryView extends GridPane {
     }
 
     private void readCategoriesFromDB() {
+        table.getItems().clear();
         table.getItems().addAll(service.getCategories());
     }
 
@@ -110,7 +111,6 @@ public class CategoryView extends GridPane {
                         () -> errorText.setText("Could not save category. Record not found in db.")
                 );
         this.table.refresh();
-
     }
 
     private void deleteCategory(ActionEvent event) {
