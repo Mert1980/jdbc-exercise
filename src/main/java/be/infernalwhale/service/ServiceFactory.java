@@ -4,6 +4,7 @@ import be.infernalwhale.service.fake.MockBrewerService;
 import be.infernalwhale.service.fake.MockCategoryService;
 import be.infernalwhale.service.fake.MockConnectionManager;
 import be.infernalwhale.service.fake.MockBeerService;
+import be.infernalwhale.service.implementations.ConnectionManagerImpl;
 
 /**
  * This is the ServiceFactory. This class will provide the implementations for the different Service interfaces
@@ -20,7 +21,7 @@ public class ServiceFactory {
 
     private static ConnectionManager connectionManager;
     public static ConnectionManager createConnectionManager() {
-        if (connectionManager == null) connectionManager = new MockConnectionManager();
+        if (connectionManager == null) connectionManager = new ConnectionManagerImpl();
         return connectionManager;
     }
 

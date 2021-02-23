@@ -8,19 +8,21 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 public class ConnectionManagerImpl implements ConnectionManager {
+    private Connection connection;
 
     @Override
     public Connection createConnection(String url, String user, String pwd) throws SQLException {
-        return null;
+        this.connection = DriverManager.getConnection(url, user, pwd);
+        return connection;
     }
 
     @Override
     public Connection getConnection() {
-        return null;
+        return this.connection;
     }
 
     @Override
     public void closeConnection() throws SQLException {
-
+        this.connection.close();
     }
 }
