@@ -83,8 +83,10 @@ public class CategoryView extends GridPane {
     }
 
     private void itemSelected(ObservableValue<? extends Category> observableValue, Category previousSelection, Category newSelection) {
-        this.categoryID.setText(newSelection.getId().toString());
-        this.categoryName.setText(newSelection.getCategoryName());
+        if(newSelection != null){
+            this.categoryID.setText(newSelection.getId().toString());
+            this.categoryName.setText(newSelection.getCategoryName());
+        }
     }
 
     private void createCategory(ActionEvent event) {
