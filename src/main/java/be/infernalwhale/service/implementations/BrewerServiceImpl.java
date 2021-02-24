@@ -47,6 +47,9 @@ public class BrewerServiceImpl implements BrewersService {
             " = ?, " + COLUMN_BREWERS_CITY + " = ?, " + COLUMN_BREWERS_TURNOVER + " = ? " +
             " WHERE " + COLUMN_BREWERS_ID + " = ?";
 
+    public static final String QUERY_DELETE_BREWER = "DELETE FROM " + TABLE_BREWERS +
+            " WHERE " + COLUMN_BREWERS_ID + " = ?";
+
     ConnectionManager connectionManager = ServiceFactory.createConnectionManager();
 
     @Override
@@ -159,6 +162,16 @@ public class BrewerServiceImpl implements BrewersService {
 
     @Override
     public boolean deleteBrewerById(Integer id) {
-        return false;
+        try (PreparedStatement statement = connectionManager.getConnection().prepareStatement(QUERY_DELETE_BREWER)){
+            statement.setInt(1, id);
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows != 1) {
+                throw new SQLException("Couldn't delete brewer!");
+            }
+            return true;
+        } catch (SQLException throwables){
+            System.out.println("Failed to delete brewer " + throwables.getMessage());
+            return false;
+        }
     }
 }

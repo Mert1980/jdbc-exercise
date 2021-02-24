@@ -1,6 +1,7 @@
 package be.infernalwhale.view;
 
 import be.infernalwhale.model.Brewer;
+import be.infernalwhale.model.Category;
 import be.infernalwhale.service.BrewersService;
 import be.infernalwhale.service.ServiceFactory;
 import be.infernalwhale.service.data.Valuta;
@@ -91,8 +92,23 @@ public class BrewersView extends GridPane {
         clearButton.setOnAction(this::clearForm);
         createButton.setOnAction(this::createBrewer);
         updateButton.setOnAction(this::updateBrewer);
+        deleteButton.setOnAction(this::deleteBrewerById);
 
         this.add(form, 3, 1);
+    }
+
+    private void deleteBrewerById(ActionEvent actionEvent) {
+        boolean deleted = service.deleteBrewerById(Integer.parseInt(this.idField.getText()));
+
+        if (deleted) {
+            this.table.getItems().stream()
+                    .filter(category -> category.getId().equals(Integer.parseInt(this.idField.getText())))
+                    .findFirst()
+                    .ifPresentOrElse(
+                            brewer -> this.table.getItems().remove(brewer),
+                            () -> errorText.setText("Selected brewer was not found in view")
+                    );
+        }
     }
 
     private void refresh() {
