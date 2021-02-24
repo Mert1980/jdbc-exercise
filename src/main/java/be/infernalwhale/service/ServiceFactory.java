@@ -4,6 +4,7 @@ import be.infernalwhale.service.fake.MockBrewerService;
 import be.infernalwhale.service.fake.MockCategoryService;
 import be.infernalwhale.service.fake.MockConnectionManager;
 import be.infernalwhale.service.fake.MockBeerService;
+import be.infernalwhale.service.implementations.BrewerServiceImpl;
 import be.infernalwhale.service.implementations.CategoryServiceImpl;
 import be.infernalwhale.service.implementations.ConnectionManagerImpl;
 
@@ -31,7 +32,7 @@ public class ServiceFactory {
     }
 
     public static BrewersService createBrewersService() {
-        return new MockBrewerService();
+        return new BrewerServiceImpl();
     }
 
     public static BeerService createBeerService() {
