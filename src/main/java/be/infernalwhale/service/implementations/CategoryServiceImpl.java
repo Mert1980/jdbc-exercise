@@ -20,7 +20,7 @@ public class CategoryServiceImpl extends ConnectionManagerImpl implements Catego
 
     public static final String QUERY_GET_CATEGORIES = "SELECT * FROM " + TABLE_CATEGORIES;
     public static final String QUERY_CREATE_CATEGORY = "INSERT INTO " + TABLE_CATEGORIES +
-            '(' + COLUMN_CATEGORIES_CATEGORY + ") VALUES(?)";
+            '(' + COLUMN_CATEGORIES_ID + ", " + COLUMN_CATEGORIES_CATEGORY + ") VALUES(?, ?)";
 
     public static final String QUERY_DELETE_CATEGORY = "DELETE FROM " + TABLE_CATEGORIES +
             " WHERE " + COLUMN_CATEGORIES_CATEGORY + " LIKE ?";
@@ -53,7 +53,14 @@ public class CategoryServiceImpl extends ConnectionManagerImpl implements Catego
     @Override
     public Category createCategory(Category category) throws ValidationException {
         try (PreparedStatement statement = connectionManager.getConnection().prepareStatement(QUERY_CREATE_CATEGORY)){
-            statement.setString(1, category.getCategoryName());
+
+            if(category.getId() == null){
+                statement.setInt(1, 0);
+            } else {
+                statement.setInt(1, category.getId());
+            }
+
+            statement.setString(2, category.getCategoryName());
             int affectedRows = statement.executeUpdate();
             if(affectedRows != 1) {
                 throw new SQLException("Couldn't create category!");

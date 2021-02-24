@@ -92,7 +92,8 @@ public class CategoryView extends GridPane {
     private void createCategory(ActionEvent event) {
         Category newCat = null;
         try {
-            newCat = service.createCategory(new Category(null, this.categoryName.getText()));
+            newCat = service.createCategory(new Category(this.categoryID.getText().isEmpty() ? null :Integer.valueOf(this.categoryID.getText()),
+                    this.categoryName.getText()));
             this.table.getItems().add(newCat);
         } catch (ValidationException e) {
             errorText.setText(e.getMessage());

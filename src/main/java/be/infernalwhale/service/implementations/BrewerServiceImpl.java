@@ -37,6 +37,8 @@ public class BrewerServiceImpl implements BrewersService {
             "SELECT " + COLUMN_BREWERS_ID + ", " + COLUMN_BREWERS_NAME + ", " + COLUMN_BREWERS_ADDRESS + ", " +
                     COLUMN_BREWERS_ZIPCODE + ", " + COLUMN_BREWERS_CITY + ", " + COLUMN_BREWERS_TURNOVER + " * ?" +
                     " FROM " + TABLE_BREWERS;
+    public static final String QUERY_CREATE_BREWER = "INSERT INTO " + TABLE_BREWERS +
+            '(' + COLUMN_BREWERS_ID + ") VALUES(?)";
 
     ConnectionManager connectionManager = ServiceFactory.createConnectionManager();
 
