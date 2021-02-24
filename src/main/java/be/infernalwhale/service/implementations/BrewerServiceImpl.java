@@ -38,7 +38,9 @@ public class BrewerServiceImpl implements BrewersService {
                     COLUMN_BREWERS_ZIPCODE + ", " + COLUMN_BREWERS_CITY + ", " + COLUMN_BREWERS_TURNOVER + " * ?" +
                     " FROM " + TABLE_BREWERS;
     public static final String QUERY_CREATE_BREWER = "INSERT INTO " + TABLE_BREWERS +
-            '(' + COLUMN_BREWERS_ID + ") VALUES(?)";
+            '(' + COLUMN_BREWERS_ID + ", " + COLUMN_BREWERS_NAME + ", " + COLUMN_BREWERS_ADDRESS + ", " +
+            COLUMN_BREWERS_ZIPCODE + ", " + COLUMN_BREWERS_CITY + ", " + COLUMN_BREWERS_TURNOVER + ") " +
+            " VALUES(?, ?, ?, ?, ?, ?)";
 
     ConnectionManager connectionManager = ServiceFactory.createConnectionManager();
 
@@ -77,7 +79,6 @@ public class BrewerServiceImpl implements BrewersService {
                         resultSet.getString(INDEX_BREWER_NAME), resultSet.getString(INDEX_BREWER_ADDRESS),
                         Integer.parseInt(resultSet.getString(INDEX_BREWER_ZIPCODE)), resultSet.getString(INDEX_BREWER_CITY),
                         resultSet.getInt(INDEX_BREWER_TURNOVER));
-                brewer = convertToCurrency(brewer, valuta);
                 brewers.add(brewer);
             }
             resultSet.close();
@@ -108,7 +109,30 @@ public class BrewerServiceImpl implements BrewersService {
 
     @Override
     public Brewer createBrewer(Brewer brewer) throws ValidationException {
-        return null;
+        try (PreparedStatement statement = connectionManager.getConnection().prepareStatement(QUERY_CREATE_BREWER)){
+
+            if(brewer.getId() == null){
+                statement.setInt(1, 0);
+            } else {
+                statement.setInt(1, brewer.getId());
+            }
+
+            statement.setString(2, brewer.getName());
+            statement.setString(3, brewer.getAddress());
+            statement.setInt(4, brewer.getZipcode());
+            statement.setString(5, brewer.getCity());
+            statement.setInt(6, brewer.getTurnover());
+
+            if (brewer.getTurnover() < 0) throw new ValidationException("Turnover can not be negative");
+
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows != 1) {
+                throw new SQLException("Couldn't create category!");
+            }
+        } catch (SQLException throwables ){
+            System.out.println("Create category failed " + throwables.getMessage());
+        }
+        return brewer;
     }
 
     @Override
