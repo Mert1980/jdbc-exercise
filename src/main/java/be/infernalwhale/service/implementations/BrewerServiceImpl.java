@@ -42,6 +42,11 @@ public class BrewerServiceImpl implements BrewersService {
             COLUMN_BREWERS_ZIPCODE + ", " + COLUMN_BREWERS_CITY + ", " + COLUMN_BREWERS_TURNOVER + ") " +
             " VALUES(?, ?, ?, ?, ?, ?)";
 
+    public static final String QUERY_UPDATE_BREWER = "UPDATE " + TABLE_BREWERS +
+            " SET " + COLUMN_BREWERS_NAME + " = ?, " + COLUMN_BREWERS_ADDRESS + " = ?, " + COLUMN_BREWERS_ZIPCODE +
+            " = ?, " + COLUMN_BREWERS_CITY + " = ?, " + COLUMN_BREWERS_TURNOVER + " = ? " +
+            " WHERE " + COLUMN_BREWERS_ID + " = ?";
+
     ConnectionManager connectionManager = ServiceFactory.createConnectionManager();
 
     @Override
@@ -90,14 +95,7 @@ public class BrewerServiceImpl implements BrewersService {
         }
     }
 
-    private Brewer convertToCurrency(Brewer b, Valuta currency) {
-        Brewer brewerCopy = new Brewer(b);
-        Integer turnover = (int) Math.round(b.getTurnover() * currency.getConversionRate());
-        brewerCopy.setTurnover(turnover);
-        return brewerCopy;
-    }
-
-    @Override
+   @Override
     public List<Brewer> getBrewers(String nameFilter) {
         return null;
     }
@@ -137,7 +135,26 @@ public class BrewerServiceImpl implements BrewersService {
 
     @Override
     public Brewer updateBrewer(Brewer brewer) throws ValidationException {
-        return null;
+        try (PreparedStatement statement = connectionManager.getConnection().prepareStatement(QUERY_UPDATE_BREWER)){
+            statement.setString(1, brewer.getName());
+            statement.setString(2, brewer.getAddress());
+            statement.setInt(3, brewer.getZipcode());
+            statement.setString(4, brewer.getCity());
+
+            if (brewer.getTurnover() < 0) throw new ValidationException("Turnover can not be negative");
+            statement.setInt(5, brewer.getTurnover());
+
+            if (brewer.getId() == null) throw new ValidationException("Id can not be empty");
+            statement.setInt(6, brewer.getId());
+
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows != 1) {
+                throw new SQLException("Couldn't update category!");
+            }
+        } catch (SQLException throwables ){
+            System.out.println("Update category failed " + throwables.getMessage());
+        }
+        return brewer;
     }
 
     @Override

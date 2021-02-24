@@ -152,12 +152,14 @@ public class BrewersView extends GridPane {
 
 
     private void tableSelectionChanged(Brewer selected) {
-        this.idField.setText(selected.getId().toString());
-        this.nameField.setText(selected.getName());
-        this.addressField.setText(selected.getAddress());
-        this.zipcodeField.setText(selected.getZipcode().toString());
-        this.cityField.setText(selected.getCity());
-        this.turnoverField.setText(selected.getTurnover().toString());
+        if(selected != null){
+            this.idField.setText(selected.getId().toString());
+            this.nameField.setText(selected.getName());
+            this.addressField.setText(selected.getAddress());
+            this.zipcodeField.setText(selected.getZipcode().toString());
+            this.cityField.setText(selected.getCity());
+            this.turnoverField.setText(selected.getTurnover().toString());
+        }
     }
 
     private void refreshInCurrency(Valuta currency) {
