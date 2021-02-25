@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryServiceImpl extends ConnectionManagerImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService{
     public static final String TABLE_CATEGORIES = "Categories";
     public static final String COLUMN_CATEGORIES_ID = "Id";
     public static final String COLUMN_CATEGORIES_CATEGORY = "Category";

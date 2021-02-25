@@ -120,6 +120,7 @@ public class BeerBlackjackView extends GridPane {
     }
 
     private void readBeersFromDB() {
+        this.table.getItems().clear();
         this.table.getItems().addAll(beerService.getBeers());
     }
 
