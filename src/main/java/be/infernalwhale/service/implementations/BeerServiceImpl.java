@@ -5,6 +5,7 @@ import be.infernalwhale.model.Brewer;
 import be.infernalwhale.model.Category;
 import be.infernalwhale.service.*;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -39,6 +40,9 @@ public class BeerServiceImpl implements BeerService {
             CategoryServiceImpl.COLUMN_CATEGORIES_ID + " INNER JOIN " + BrewerServiceImpl.TABLE_BREWERS + " ON " +
             TABLE_BEERS + "." + COLUMN_BEERS_BREWER_ID + " = " + BrewerServiceImpl.TABLE_BREWERS + "." +
             BrewerServiceImpl.COLUMN_BREWERS_ID;
+
+    public static final String QUERY_GET_BEERS_ALCOHOL_CONSUMED = QUERY_GET_BEERS + " WHERE " + COLUMN_BEERS_ALCOHOL +
+            " = ? LIMIT 1";
 
 
     ConnectionManager connectionManager = ServiceFactory.createConnectionManager();
@@ -86,6 +90,30 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public List<Beer> getBeers(int alcoholConsumed) {
-        return null;
+        List<Beer> beers = new ArrayList<>();
+        List<Brewer> brewers = brewerService.getBrewers();
+        List<Category> categories = categoryService.getCategories();
+
+        try(PreparedStatement statement = connectionManager.getConnection().
+                prepareStatement(QUERY_GET_BEERS_ALCOHOL_CONSUMED)) {
+            statement.setInt(1, alcoholConsumed);
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                Beer beer = new Beer(resultSet.getInt(INDEX_BEERS_ID),
+                        resultSet.getString(INDEX_BEERS_NAME),
+                        getBrewerById(brewers, resultSet.getInt(INDEX_BREWERY_NAME)),
+                        getCategoryById(categories, resultSet.getInt(INDEX_CATEGORY_NAME)),
+                        resultSet.getFloat(INDEX_BEERS_PRICE),
+                        resultSet.getInt(INDEX_BEERS_STOCK),
+                        (int)resultSet.getFloat(INDEX_BEERS_ALCOHOL));
+                beers.add(beer);
+            }
+            resultSet.close();
+            return beers;
+        } catch (SQLException throwables) {
+            System.out.println("Query failed " + throwables.getMessage());
+            throwables.printStackTrace();
+            return null;
+        }
     }
 }

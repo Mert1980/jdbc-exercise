@@ -93,7 +93,7 @@ public class BeerBlackjackView extends GridPane {
         GaussianBlur blur = new GaussianBlur(alcConsumed / 2f);
         this.table.setEffect(blur);
 
-        this.table.getItems().clear();
+       // this.table.getItems().clear();
         this.table.getItems().addAll(beerService.getBeers(alcConsumed));
 
         if (alcConsumed > 21) {
