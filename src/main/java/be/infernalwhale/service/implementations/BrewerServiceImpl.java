@@ -138,19 +138,29 @@ public class BrewerServiceImpl implements BrewersService {
         try (PreparedStatement statement = connectionManager.getConnection().
                 prepareStatement(BrewerQueries.QUERY_CREATE_BREWER)){
 
-            if(brewer.getId() == null){
+            if (brewer.getName().isEmpty()) {
+                throw new ValidationException("Brewer name can not be empty");
+            }
+
+            if (brewer.getId() == null) {
                 statement.setInt(1, 0);
+            } else if (brewer.getId() < 0) {
+                throw new ValidationException("Id can not be a negative");
             } else {
                 statement.setInt(1, brewer.getId());
             }
+
+            if (brewer.getZipcode() < 0){
+                throw new ValidationException("Zipcode can not be a negative");
+            }
+
+            if (brewer.getTurnover() < 0) throw new ValidationException("Turnover can not be negative");
 
             statement.setString(2, brewer.getName());
             statement.setString(3, brewer.getAddress());
             statement.setInt(4, brewer.getZipcode());
             statement.setString(5, brewer.getCity());
             statement.setInt(6, brewer.getTurnover());
-
-            if (brewer.getTurnover() < 0) throw new ValidationException("Turnover can not be negative");
 
             int affectedRows = statement.executeUpdate();
             if(affectedRows != 1) {
@@ -167,15 +177,21 @@ public class BrewerServiceImpl implements BrewersService {
         try (PreparedStatement statement = connectionManager.getConnection().
                 prepareStatement(BrewerQueries.QUERY_UPDATE_BREWER)){
 
-            statement.setString(1, brewer.getName());
-            statement.setString(2, brewer.getAddress());
-            statement.setInt(3, brewer.getZipcode());
-            statement.setString(4, brewer.getCity());
-
             if (brewer.getTurnover() < 0) throw new ValidationException("Turnover can not be negative");
             statement.setInt(5, brewer.getTurnover());
 
             if (brewer.getId() == null) throw new ValidationException("Id can not be empty");
+
+            if (brewer.getId() < 0) throw new ValidationException("Id can not be negative");
+
+            if (brewer.getZipcode() < 0){
+                throw new ValidationException("Zipcode can not be a negative");
+            }
+
+            statement.setString(1, brewer.getName());
+            statement.setString(2, brewer.getAddress());
+            statement.setInt(3, brewer.getZipcode());
+            statement.setString(4, brewer.getCity());
             statement.setInt(6, brewer.getId());
 
             int affectedRows = statement.executeUpdate();

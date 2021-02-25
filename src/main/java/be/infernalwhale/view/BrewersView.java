@@ -168,7 +168,7 @@ public class BrewersView extends GridPane {
 
 
     private void tableSelectionChanged(Brewer selected) {
-        if(selected != null){
+        if(selected != null && selected.getId() != null){
             this.idField.setText(selected.getId().toString());
             this.nameField.setText(selected.getName());
             this.addressField.setText(selected.getAddress());
