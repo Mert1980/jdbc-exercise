@@ -80,6 +80,8 @@ public class BeerBlackjackView extends GridPane {
             }
         });
 
+        Button resetButton = new Button("Reset Game");
+        resetButton.setOnAction(event -> resetGame());
 
         alcoholConsumed.setFont(Font.font(
                 beerLabel.getFont().getName(),
@@ -87,9 +89,17 @@ public class BeerBlackjackView extends GridPane {
                 beerLabel.getFont().getSize() + 20
         ));
 
-        HBox buttonGroup = new HBox(10, readButton, chugSelected, alcoholConsumed);
+        HBox buttonGroup = new HBox(10, readButton, chugSelected, resetButton, alcoholConsumed);
         this.add(buttonGroup, 0, 2);
 
+    }
+
+    private void resetGame() {
+        this.table.getItems().clear();
+        this.table.getItems().addAll(beerService.getBeers());
+        this.alcConsumed = 0;
+        this.alcoholConsumed.setText(alcConsumed.toString());
+        this.table.setEffect(null);
     }
 
     private void drinkSelectedBeer() {
