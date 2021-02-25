@@ -17,10 +17,18 @@ public class BrewerQueries {
     public static final int INDEX_BREWER_TURNOVER = 6;
 
     public static final String QUERY_GET_BREWERS = "SELECT * FROM " + TABLE_BREWERS;
+
+    public static final String QUERY_GET_BREWERS_NAME_FILTER = QUERY_GET_BREWERS + " WHERE " + COLUMN_BREWERS_NAME +
+            " LIKE ?";
+
     public static final String QUERY_GET_BREWERS_WITH_CURRENCY =
             "SELECT " + COLUMN_BREWERS_ID + ", " + COLUMN_BREWERS_NAME + ", " + COLUMN_BREWERS_ADDRESS + ", " +
                     COLUMN_BREWERS_ZIPCODE + ", " + COLUMN_BREWERS_CITY + ", " + COLUMN_BREWERS_TURNOVER + " * ?" +
                     " FROM " + TABLE_BREWERS;
+
+    public static final String QUERY_GET_BREWERS_NAME_AND_CURRENCY_FILTER = QUERY_GET_BREWERS_WITH_CURRENCY +
+            " WHERE " + COLUMN_BREWERS_NAME + " LIKE ?";
+
     public static final String QUERY_CREATE_BREWER = "INSERT INTO " + TABLE_BREWERS +
             '(' + COLUMN_BREWERS_ID + ", " + COLUMN_BREWERS_NAME + ", " + COLUMN_BREWERS_ADDRESS + ", " +
             COLUMN_BREWERS_ZIPCODE + ", " + COLUMN_BREWERS_CITY + ", " + COLUMN_BREWERS_TURNOVER + ") " +
@@ -33,4 +41,7 @@ public class BrewerQueries {
 
     public static final String QUERY_DELETE_BREWER = "DELETE FROM " + TABLE_BREWERS +
             " WHERE " + COLUMN_BREWERS_ID + " = ?";
+
+
+
 }
