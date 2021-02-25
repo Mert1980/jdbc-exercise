@@ -12,7 +12,7 @@ public class CategoryQueries {
             '(' + COLUMN_CATEGORIES_ID + ", " + COLUMN_CATEGORIES_CATEGORY + ") VALUES(?, ?)";
 
     public static final String QUERY_DELETE_CATEGORY = "DELETE FROM " + TABLE_CATEGORIES +
-            " WHERE " + COLUMN_CATEGORIES_CATEGORY + " LIKE ?";
+            " WHERE " + COLUMN_CATEGORIES_ID + " = ?";
 
     public static final String QUERY_UPDATE_CATEGORY = "UPDATE " + TABLE_CATEGORIES +
             " SET " + COLUMN_CATEGORIES_CATEGORY + " = ? WHERE " + COLUMN_CATEGORIES_ID + " = ?";

@@ -78,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService{
     public boolean deleteCategory(Category category) {
         try (PreparedStatement statement = connectionManager.getConnection().
                 prepareStatement(CategoryQueries.QUERY_DELETE_CATEGORY)){
-            statement.setString(1, category.getCategoryName());
+            statement.setInt(1, category.getId());
             int affectedRows = statement.executeUpdate();
             if(affectedRows != 1) {
                 throw new SQLException("Couldn't delete category!");
