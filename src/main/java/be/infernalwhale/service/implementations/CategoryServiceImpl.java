@@ -41,13 +41,13 @@ public class CategoryServiceImpl implements CategoryService{
         try (PreparedStatement statement = connectionManager.getConnection().
                 prepareStatement(CategoryQueries.QUERY_CREATE_CATEGORY)){
 
-            if (category.getId() < 0) {
-                throw new ValidationException("Id can not be a negative integer");
-            } else if(category.getId() == null){
-                statement.setInt(1, 0);
-            } else {
-                statement.setInt(1, category.getId());
-            }
+                if(category.getId() == null){
+                    statement.setInt(1, 0);
+                } else if (category.getId() < 0) {
+                    throw new ValidationException("Id can not be a negative integer");
+                } else {
+                    statement.setInt(1, category.getId());
+                }
 
             statement.setString(2, category.getCategoryName());
             int affectedRows = statement.executeUpdate();
