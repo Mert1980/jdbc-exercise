@@ -15,23 +15,23 @@ import java.util.List;
 public class BeerServiceImpl implements BeerService {
 
     ConnectionManager connectionManager = ServiceFactory.createConnectionManager();
-    private final BrewersService brewerService = ServiceFactory.createBrewersService();
-    private final CategoryService categoryService = ServiceFactory.createCategoryService();
 
     @Override
     public List<Beer> getBeers() {
         List<Beer> beers = new ArrayList<>();
-        List<Brewer> brewers = brewerService.getBrewers();
-        List<Category> categories = categoryService.getCategories();
 
         try(Statement statement = connectionManager.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(BeerQueries.QUERY_GET_BEERS)) {
 
             while(resultSet.next()){
+                Category category = new Category(null, resultSet.getString(BeerQueries.INDEX_CATEGORY_NAME));
+                Brewer brewer = new Brewer(null, resultSet.getString(BeerQueries.INDEX_BREWERY_NAME), null,
+                        null, null, null);
+
                 Beer beer = new Beer(resultSet.getInt(BeerQueries.INDEX_BEERS_ID),
                         resultSet.getString(BeerQueries.INDEX_BEERS_NAME),
-                        getBrewerById(brewers, resultSet.getInt(BeerQueries.INDEX_BREWERY_NAME)),
-                        getCategoryById(categories, resultSet.getInt(BeerQueries.INDEX_CATEGORY_NAME)),
+                        brewer,
+                        category,
                         resultSet.getFloat(BeerQueries.INDEX_BEERS_PRICE),
                         resultSet.getInt(BeerQueries.INDEX_BEERS_STOCK),
                         (int)resultSet.getFloat(BeerQueries.INDEX_BEERS_ALCOHOL));
@@ -47,23 +47,9 @@ public class BeerServiceImpl implements BeerService {
         }
     }
 
-    private Category getCategoryById(List<Category> categories, int catID) {
-        Category foundCategory = categories.stream().filter(category -> category.getId() == catID).
-                findFirst().orElse(null);
-        return foundCategory;
-    }
-
-    private Brewer getBrewerById(List<Brewer> brewers, int brewerID) {
-        Brewer foundBrewer = brewers.stream().filter(brewer -> brewer.getId() == brewerID).
-                findFirst().orElse(null);
-        return foundBrewer;
-    }
-
     @Override
     public List<Beer> getBeers(int alcoholConsumed) {
         List<Beer> beers = new ArrayList<>();
-        List<Brewer> brewers = brewerService.getBrewers();
-        List<Category> categories = categoryService.getCategories();
 
         try(PreparedStatement statement = connectionManager.getConnection().
                 prepareStatement(BeerQueries.QUERY_GET_BEERS_ALCOHOL_CONSUMED)) {
@@ -71,10 +57,14 @@ public class BeerServiceImpl implements BeerService {
             ResultSet resultSet = statement.executeQuery();
 
             while(resultSet.next()){
+                Category category = new Category(null, resultSet.getString(BeerQueries.INDEX_CATEGORY_NAME));
+                Brewer brewer = new Brewer(null, resultSet.getString(BeerQueries.INDEX_BREWERY_NAME), null,
+                        null, null, null);
+
                 Beer beer = new Beer(resultSet.getInt(BeerQueries.INDEX_BEERS_ID),
                         resultSet.getString(BeerQueries.INDEX_BEERS_NAME),
-                        getBrewerById(brewers, resultSet.getInt(BeerQueries.INDEX_BREWERY_NAME)),
-                        getCategoryById(categories, resultSet.getInt(BeerQueries.INDEX_CATEGORY_NAME)),
+                        brewer,
+                        category,
                         resultSet.getFloat(BeerQueries.INDEX_BEERS_PRICE),
                         resultSet.getInt(BeerQueries.INDEX_BEERS_STOCK),
                         (int)resultSet.getFloat(BeerQueries.INDEX_BEERS_ALCOHOL));

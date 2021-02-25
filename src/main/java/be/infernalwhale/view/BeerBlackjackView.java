@@ -93,14 +93,16 @@ public class BeerBlackjackView extends GridPane {
     }
 
     private void drinkSelectedBeer() {
-        this.alcConsumed = this.alcConsumed + this.table.getSelectionModel().getSelectedItem().getAlcohol();
-        this.alcoholConsumed.setText(alcConsumed.toString());
+        if(this.table.getSelectionModel().getSelectedItem() != null){
+            this.alcConsumed = this.alcConsumed + this.table.getSelectionModel().getSelectedItem().getAlcohol();
+            this.alcoholConsumed.setText(alcConsumed.toString());
 
-        GaussianBlur blur = new GaussianBlur(alcConsumed / 2f);
-        this.table.setEffect(blur);
+            GaussianBlur blur = new GaussianBlur(alcConsumed / 2f);
+            this.table.setEffect(blur);
 
-        this.table.getItems().clear();
-        this.table.getItems().addAll(beerService.getBeers(alcConsumed));
+            this.table.getItems().clear();
+            this.table.getItems().addAll(beerService.getBeers(alcConsumed));
+        }
 
         if (alcConsumed > 21) {
             Stage popup = new Stage();

@@ -20,8 +20,8 @@ public class BeerQueries {
 
     public static final String QUERY_GET_BEERS =
             "SELECT " + TABLE_BEERS + "." + COLUMN_BEERS_ID + ", " + TABLE_BEERS + "." + COLUMN_BEERS_NAME + ", " +
-                    BrewerQueries.TABLE_BREWERS + "." + BrewerQueries.COLUMN_BREWERS_ID + ", " +
-                    CategoryQueries.TABLE_CATEGORIES + "." + CategoryQueries.COLUMN_CATEGORIES_ID + ", " +
+                    BrewerQueries.TABLE_BREWERS + "." + BrewerQueries.COLUMN_BREWERS_NAME + ", " +
+                    CategoryQueries.TABLE_CATEGORIES + "." + CategoryQueries.COLUMN_CATEGORIES_CATEGORY + ", " +
                     COLUMN_BEERS_PRICE + ", " + COLUMN_BEERS_STOCK + ", " + COLUMN_BEERS_ALCOHOL + " FROM " + TABLE_BEERS +
                     " INNER JOIN " + CategoryQueries.TABLE_CATEGORIES + " ON " + TABLE_BEERS + "." +
                     COLUMN_BEERS_CATEGORY_ID + " = " + CategoryQueries.TABLE_CATEGORIES + "." +
