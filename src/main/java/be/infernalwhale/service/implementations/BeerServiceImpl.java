@@ -26,6 +26,7 @@ public class BeerServiceImpl implements BeerService {
 
         try(Statement statement = connectionManager.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(BeerQueries.QUERY_GET_BEERS)) {
+
             while(resultSet.next()){
                 Beer beer = new Beer(resultSet.getInt(BeerQueries.INDEX_BEERS_ID),
                         resultSet.getString(BeerQueries.INDEX_BEERS_NAME),
@@ -36,6 +37,7 @@ public class BeerServiceImpl implements BeerService {
                         (int)resultSet.getFloat(BeerQueries.INDEX_BEERS_ALCOHOL));
                 beers.add(beer);
             }
+
             resultSet.close();
             return beers;
         } catch (SQLException throwables) {
@@ -67,6 +69,7 @@ public class BeerServiceImpl implements BeerService {
                 prepareStatement(BeerQueries.QUERY_GET_BEERS_ALCOHOL_CONSUMED)) {
             statement.setInt(1, (alcoholConsumed * 3));
             ResultSet resultSet = statement.executeQuery();
+
             while(resultSet.next()){
                 Beer beer = new Beer(resultSet.getInt(BeerQueries.INDEX_BEERS_ID),
                         resultSet.getString(BeerQueries.INDEX_BEERS_NAME),
@@ -77,6 +80,7 @@ public class BeerServiceImpl implements BeerService {
                         (int)resultSet.getFloat(BeerQueries.INDEX_BEERS_ALCOHOL));
                 beers.add(beer);
             }
+
             resultSet.close();
             return beers;
         } catch (SQLException throwables) {

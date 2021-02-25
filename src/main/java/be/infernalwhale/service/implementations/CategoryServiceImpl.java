@@ -20,11 +20,13 @@ public class CategoryServiceImpl implements CategoryService{
 
         try(Statement statement = connectionManager.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(CategoryQueries.QUERY_GET_CATEGORIES)) {
+
             while(resultSet.next()){
                 Category category = new Category(resultSet.getInt(CategoryQueries.INDEX_CATEGORY_ID),
                         resultSet.getString(CategoryQueries.INDEX_CATEGORY_NAME));
                 categories.add(category);
             }
+
             resultSet.close();
             return categories;
         } catch (SQLException throwables) {
