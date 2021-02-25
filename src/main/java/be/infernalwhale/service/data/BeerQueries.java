@@ -29,8 +29,8 @@ public class BeerQueries {
                     TABLE_BEERS + "." + COLUMN_BEERS_BREWER_ID + " = " + BrewerQueries.TABLE_BREWERS + "." +
                     BrewerQueries.COLUMN_BREWERS_ID;
 
-    public static final String QUERY_GET_BEERS_ALCOHOL_CONSUMED = QUERY_GET_BEERS + " WHERE " + COLUMN_BEERS_ALCOHOL +
-            " = ? LIMIT 1";
+    public static final String QUERY_GET_BEERS_ALCOHOL_CONSUMED = QUERY_GET_BEERS + " LIMIT ?";
+
 
 
 }

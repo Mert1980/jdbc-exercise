@@ -65,7 +65,7 @@ public class BeerServiceImpl implements BeerService {
 
         try(PreparedStatement statement = connectionManager.getConnection().
                 prepareStatement(BeerQueries.QUERY_GET_BEERS_ALCOHOL_CONSUMED)) {
-            statement.setInt(1, alcoholConsumed);
+            statement.setInt(1, (alcoholConsumed * 3));
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
                 Beer beer = new Beer(resultSet.getInt(BeerQueries.INDEX_BEERS_ID),
