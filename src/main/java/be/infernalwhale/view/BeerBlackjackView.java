@@ -73,7 +73,13 @@ public class BeerBlackjackView extends GridPane {
         readButton.setOnAction(event -> readBeersFromDB());
 
         Button chugSelected = new Button("Drink Selected");
-        chugSelected.setOnAction(event -> drinkSelectedBeer());
+
+        chugSelected.setOnAction(event -> {
+            if(Integer.parseInt(alcoholConsumed.getText()) < 21){
+                drinkSelectedBeer();
+            }
+        });
+
 
         alcoholConsumed.setFont(Font.font(
                 beerLabel.getFont().getName(),
