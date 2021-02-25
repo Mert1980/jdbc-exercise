@@ -4,30 +4,14 @@ import be.infernalwhale.model.Category;
 import be.infernalwhale.service.CategoryService;
 import be.infernalwhale.service.ConnectionManager;
 import be.infernalwhale.service.ServiceFactory;
+import be.infernalwhale.service.data.CategoryQueries;
 import be.infernalwhale.service.exception.ValidationException;
-import com.mysql.cj.jdbc.ConnectionImpl;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryServiceImpl implements CategoryService{
-    public static final String TABLE_CATEGORIES = "Categories";
-    public static final String COLUMN_CATEGORIES_ID = "Id";
-    public static final String COLUMN_CATEGORIES_CATEGORY = "Category";
-    public static final int INDEX_CATEGORY_ID = 1;
-    public static final int INDEX_CATEGORY_NAME = 2;
-
-    public static final String QUERY_GET_CATEGORIES = "SELECT * FROM " + TABLE_CATEGORIES;
-    public static final String QUERY_CREATE_CATEGORY = "INSERT INTO " + TABLE_CATEGORIES +
-            '(' + COLUMN_CATEGORIES_ID + ", " + COLUMN_CATEGORIES_CATEGORY + ") VALUES(?, ?)";
-
-    public static final String QUERY_DELETE_CATEGORY = "DELETE FROM " + TABLE_CATEGORIES +
-            " WHERE " + COLUMN_CATEGORIES_CATEGORY + " LIKE ?";
-
-    public static final String QUERY_UPDATE_CATEGORY = "UPDATE " + TABLE_CATEGORIES +
-            " SET " + COLUMN_CATEGORIES_CATEGORY + " = ? WHERE " + COLUMN_CATEGORIES_ID + " = ?";
-
     ConnectionManager connectionManager = ServiceFactory.createConnectionManager();
 
     @Override
@@ -35,10 +19,10 @@ public class CategoryServiceImpl implements CategoryService{
         List<Category> categories = new ArrayList<>();
 
         try(Statement statement = connectionManager.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery(QUERY_GET_CATEGORIES)) {
+            ResultSet resultSet = statement.executeQuery(CategoryQueries.QUERY_GET_CATEGORIES)) {
             while(resultSet.next()){
-                Category category = new Category(resultSet.getInt(INDEX_CATEGORY_ID),
-                        resultSet.getString(INDEX_CATEGORY_NAME));
+                Category category = new Category(resultSet.getInt(CategoryQueries.INDEX_CATEGORY_ID),
+                        resultSet.getString(CategoryQueries.INDEX_CATEGORY_NAME));
                 categories.add(category);
             }
             resultSet.close();
@@ -52,7 +36,8 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Category createCategory(Category category) throws ValidationException {
-        try (PreparedStatement statement = connectionManager.getConnection().prepareStatement(QUERY_CREATE_CATEGORY)){
+        try (PreparedStatement statement = connectionManager.getConnection().
+                prepareStatement(CategoryQueries.QUERY_CREATE_CATEGORY)){
 
             if(category.getId() == null){
                 statement.setInt(1, 0);
@@ -73,7 +58,8 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Category updateCategory(Category category) {
-        try (PreparedStatement statement = connectionManager.getConnection().prepareStatement(QUERY_UPDATE_CATEGORY)){
+        try (PreparedStatement statement = connectionManager.getConnection().
+                prepareStatement(CategoryQueries.QUERY_UPDATE_CATEGORY)){
             statement.setString(1, category.getCategoryName());
             statement.setInt(2, category.getId());
             int affectedRows = statement.executeUpdate();
@@ -88,7 +74,8 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public boolean deleteCategory(Category category) {
-        try (PreparedStatement statement = connectionManager.getConnection().prepareStatement(QUERY_DELETE_CATEGORY)){
+        try (PreparedStatement statement = connectionManager.getConnection().
+                prepareStatement(CategoryQueries.QUERY_DELETE_CATEGORY)){
             statement.setString(1, category.getCategoryName());
             int affectedRows = statement.executeUpdate();
             if(affectedRows != 1) {
